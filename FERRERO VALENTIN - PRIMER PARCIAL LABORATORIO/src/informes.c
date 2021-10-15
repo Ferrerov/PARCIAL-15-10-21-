@@ -52,7 +52,7 @@ int clientesPorPedido(int idClientePedido, eCliente datosCliente[], int tamClien
 
 	for(int i = 0; i < tamClientes; i++)
 	{
-		if(datosCliente[i].idCliente == idClientePedido && datosCliente[i].isEmpty == OCUPADO)
+		if(idClientePedido == datosCliente[i].idCliente && datosCliente[i].isEmpty == OCUPADO)
 		{
 			printf("\n|%*s|%*s|",-13,"CUIT",-30 ,"DIRECCION");
 			printf("\n----------------------------------------------");
@@ -77,7 +77,6 @@ int informarPendientes(eCliente datosCliente[], int tamCliente, ePedido datosPed
 			printf("\nCantidad de kilos totales: %d\n" , datosPedido[i].kilosTotales);
 		}
 	}
-
 	return retorno;
 }
 
@@ -126,13 +125,11 @@ int pedirLocalidad(eCliente datosCliente[], int tamCliente, int* pIndice)
 
 	for(int i = 0; i< tamCliente; i++)
 	{
-		if(datosCliente[i].isEmpty == OCUPADO)
+		if(datosCliente[i].isEmpty == OCUPADO && strcmp(datosCliente[i].localidad, localidad) == 0)
 		{
-			if(strcmp(datosCliente[i].localidad, localidad) == 0)
-			{
-				*pIndice = i;
-			}
+			*pIndice = i;
 			retorno = 0;
+			break;
 		}
 	}
 

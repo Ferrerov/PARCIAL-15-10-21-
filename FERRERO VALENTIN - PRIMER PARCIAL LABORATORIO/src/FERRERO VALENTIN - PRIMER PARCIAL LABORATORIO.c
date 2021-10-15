@@ -28,10 +28,18 @@ int main(void) {
 													{"EL TIO", "26432623428" , "Mitre 167" , "Trenque Lauquen", 2,1},
 													{"Me piace", "28235463972" , "Llorente 456" , "Cuenca" ,3,1},
 													{"EL PUESTITO", "25345214582" , "Oleaga 2345" , "Piedritas" , 4,1}
-        										 };
-        ePedido datosPedido[TAM_PEDIDOS];
+        								      };
+        ePedido datosPedido[TAM_PEDIDOS] = {
+													{1,PENDIENTE,4,450,0,0,0,OCUPADO},
+													{2,PENDIENTE,2,1000,0,0,0,OCUPADO},
+													{3,PENDIENTE,1,150,0,0,0,OCUPADO},
+													{4,PENDIENTE,3,3200,0,0,0,OCUPADO}
+										   };
+
+
+
         //inicializarClientes(datosCliente, TAM_CLIENTES);
-        inicializarPedidos(datosPedido, TAM_CLIENTES);
+        //inicializarPedidos(datosPedido, TAM_CLIENTES);
 
 	    do{
 	    	printf("\n1. Dar de alta un cliente.\n");

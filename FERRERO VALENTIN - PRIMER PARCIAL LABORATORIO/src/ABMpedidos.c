@@ -113,7 +113,7 @@ int procesarResiduos(ePedido datosPedido[], int tamPedido, int reintentos)
 {
 	int retorno = -1;
 	int indicePedido;
-	int verificador;
+	int verificador = 0;
 	int controlKilos;
 
 	do
@@ -136,6 +136,10 @@ int procesarResiduos(ePedido datosPedido[], int tamPedido, int reintentos)
 		{
 			retorno = 0;
 			break;
+		}
+		else
+		{
+			printf("\nLa cantidad de kilos ingresada excede los kilos totales declarados. Por favor reingrese los datos: ");
 		}
 	}while( retorno != 0);
 
