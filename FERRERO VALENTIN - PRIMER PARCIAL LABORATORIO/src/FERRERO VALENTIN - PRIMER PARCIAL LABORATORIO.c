@@ -40,9 +40,9 @@ int main(void) {
 										   };*/
         eLocalidad datosLocalidad[TAM_CLIENTES];
 
-        hardcodearClientes(datosCliente, 12);
-        hardcodearLocalidad(datosLocalidad, 6);
-        hardcodearPedidos(datosPedido, 20);
+        HardcodearClientes(datosCliente, 12);
+        HardcodearLocalidad(datosLocalidad, 6);
+        HardcodearPedidos(datosPedido, 20);
 
         //InicializarClientes(datosCliente, TAM_CLIENTES);
         //InicializarPedidos(datosPedido, TAM_PEDIDOS);

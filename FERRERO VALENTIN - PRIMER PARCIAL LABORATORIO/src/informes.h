@@ -43,7 +43,15 @@ int InformarPendientes(eCliente datosCliente[], int tamCliente, ePedido datosPed
 /// @return devuelve 0 si se pudo cargar el array, -1 si no se pudo
 int InformarProcesados(eCliente datosCliente[], int tamCliente, ePedido datosPedido[], int tamPedido);
 
-int InformarPendientesPorLocalidad(eLocalidad localidades[], eCliente datosCliente[], int tam, ePedido datosPedido[], int tamPedido);
+/// @fn int InformarPendientesPorLocalidad(eLocalidad[], eCliente[], int, ePedido[], int)
+/// @brief informa la cantidad de pedidos pendientes que hay para una localidad ingresada por el usuario
+/// @param localidades estructura de datos de localidades
+/// @param datosCliente estructura de datos de clientes
+/// @param tamCliente tamaño del array de clientes
+/// @param datosPedido estructura de datos de pedidos
+/// @param tamPedido tamaño del array de pedidos
+/// @return devuelve 0 si se encontro la localidad y -1 si no se enocntro
+int InformarPendientesPorLocalidad(eLocalidad localidades[], eCliente datosCliente[], int tamCliente, ePedido datosPedido[], int tamPedido);
 
 /// @fn int promedioPolipropileno(ePedido[], int, int, float*)
 /// @brief calcula el polipropileno promedio por cliente
@@ -58,18 +66,39 @@ int PromedioPolipropileno(ePedido datosPedido[], int tamPedido, int idCliente, f
 /// @brief informa el polipropileno promedio por cliente
 /// @param datosCliente estructura de datos de clientes
 /// @param tamCliente tamaño del array de clientes
-/// @param datosPedido estructura de datos de pedidos
+/// @param datosPedido tamaño del array de pedidos
 /// @param tamPedido tamaño del array de pedidos
 /// @return devuelve 0 si se pudo cargar el array, -1 si no se pudo
 int InformarPolipropilenoPromedio(eCliente datosCliente[], int tamCliente, ePedido datosPedido[], int tamPedido);
 
-
+/// @fn int BuscarMaxEstadoPedido(int*, int*, int, eCliente[], int, ePedido[], int)
+/// @brief busca el cliente con la mayor cantidad de pedidos en un estado especifico
+/// @param pIndice devuelve como puntero el indice del array de cliente que mas pedidos tiene
+/// @param pCantidad devuelve como puntero la cantidad de pedidos que resulto ser la mayor
+/// @param estadoPedido señala que estado de pedido se busca, si PENDIENTE o COMPLETADO
+/// @param datosCliente estructura de datos de clientes
+/// @param tamCliente tamaño del array de clientes
+/// @param datosPedido tamaño del array de pedidos
+/// @param tamPedidotamaño del array de pedidos
+/// @return devuelve 0 si se encontro un maximo y -1 si no se encontro
 int BuscarMaxEstadoPedido(int* pIndice, int* pCantidad, int estadoPedido,eCliente datosCliente[], int tamCliente, ePedido datosPedido[], int tamPedido);;
 
-
+/// @fn int InformarClienteMasPendientes(eCliente[], int, ePedido[], int)
+/// @brief imprime en pantalla el cliente con mas pedidos pendientes
+/// @param datosCliente estructura de datos de clientes
+/// @param tamCliente tamaño del array de clientes
+/// @param datosPedido tamaño del array de pedidos
+/// @param tamPedido tamaño del array de pedidos
+/// @return devuelve 0 si hay clientes que informar y -1 si no los hay
 int InformarClienteMasPendientes(eCliente datosCliente[], int tamCliente, ePedido datosPedido[], int tamPedido);
 
-
+/// @fn int InformarClienteMasCompletados(eCliente[], int, ePedido[], int)
+/// @brief imprime en pantalla el cliente con mas pedidos completados
+/// @param datosCliente estructura de datos de clientes
+/// @param tamCliente tamaño del array de clientes
+/// @param datosPedido tamaño del array de pedidos
+/// @param tamPedido tamaño del array de pedidos
+/// @return devuelve 0 si hay clientes que informar y -1 si no los hay
 int InformarClienteMasCompletados(eCliente datosCliente[], int tamCliente, ePedido datosPedido[], int tamPedido);
 
 #endif /* INFORMES_H_ */

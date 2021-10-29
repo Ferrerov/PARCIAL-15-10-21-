@@ -96,24 +96,32 @@ int InformarProcesados(eCliente datosCliente[], int tamCliente, ePedido datosPed
 	return retorno;
 }
 
-int InformarPendientesPorLocalidad(eLocalidad localidades[], eCliente datosCliente[], int tam, ePedido datosPedido[], int tamPedido)
+int InformarPendientesPorLocalidad(eLocalidad localidades[], eCliente datosCliente[], int tamCliente, ePedido datosPedido[], int tamPedido)
 {
 	int retorno = -1;
 	int idLocalidad;
 	char auxLocalidad[50];
 	int cantidadPendientes;
 
-	VerListadoDeLocalidades(localidades, tam);
-	BuscarLocalidad(&idLocalidad, auxLocalidad, localidades, tam);
-	for(int i = 0; i < tam; i++)
+	VerListadoDeLocalidades(localidades, tamCliente);
+	if(BuscarLocalidad(&idLocalidad, auxLocalidad, localidades, tamCliente)==0)
 	{
-		if(datosCliente[i].idLocalidad == idLocalidad &&
-				ContadorEstadoPedido(&cantidadPendientes, datosCliente[i].idCliente, PENDIENTE, datosPedido, tamPedido) == 0)
+		for(int i = 0; i < tamCliente; i++)
 		{
-			printf("\nLocalidad seleccionada: %s" , auxLocalidad);
-			printf("\nCantidad de pedidos pendientes: %d", cantidadPendientes);
+			if(datosCliente[i].idLocalidad == idLocalidad &&
+					ContadorEstadoPedido(&cantidadPendientes, datosCliente[i].idCliente, PENDIENTE, datosPedido, tamPedido) == 0)
+			{
+				retorno = 0;
+				printf("\nLocalidad seleccionada: %s" , auxLocalidad);
+				printf("\nCantidad de pedidos pendientes: %d", cantidadPendientes);
+			}
 		}
 	}
+	else
+	{
+		printf("\nNo se ha encontrado la localidad ingresada.");
+	}
+
 	return retorno;
 }
 

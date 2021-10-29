@@ -59,7 +59,7 @@ int idLocalidad[12] = {1,4,2,5,3,6,1,3,1,5,6,1};
 int idCliente[20] = {1,2,5,2,5,3,6,7,2,4,2,9,11,4,2,8,6,2,1,3};
 float kilosTotales[20] = {150,250,5460,1200,750,300,650,200,550,100,275,970,2900,1800,500,900,850,1350,1500,1600};
 
-void hardcodearLocalidad(eLocalidad datosLocalidad[], int tamLocalidad)
+void HardcodearLocalidad(eLocalidad datosLocalidad[], int tamLocalidad)
 {
 	for(int i=0; i<tamLocalidad; i++)
 	{
@@ -69,7 +69,7 @@ void hardcodearLocalidad(eLocalidad datosLocalidad[], int tamLocalidad)
 	}
 }
 
-void hardcodearClientes(eCliente datosCliente[], int tamClientes)
+void HardcodearClientes(eCliente datosCliente[], int tamClientes)
 {
 	for(int i=0; i<tamClientes; i++)
 	{
@@ -82,7 +82,7 @@ void hardcodearClientes(eCliente datosCliente[], int tamClientes)
 	}
 }
 
-void hardcodearPedidos(ePedido datosPedido[], int tamPedidos)
+void HardcodearPedidos(ePedido datosPedido[], int tamPedidos)
 {
 	for(int i=0; i<tamPedidos; i++)
 	{

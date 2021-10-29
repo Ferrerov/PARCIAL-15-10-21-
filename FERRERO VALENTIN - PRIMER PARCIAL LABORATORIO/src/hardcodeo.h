@@ -5,10 +5,10 @@
 #include "ABMpedidos.h"
 #include "localidad.h"
 
-void hardcodearLocalidad(eLocalidad datosLocalidad[], int tamLocalidad);
+void HardcodearLocalidad(eLocalidad datosLocalidad[], int tamLocalidad);
 
-void hardcodearClientes(eCliente datosCliente[], int tamClientes);
+void HardcodearClientes(eCliente datosCliente[], int tamClientes);
 
-void hardcodearPedidos(ePedido datosPedido[], int tamPedidos);
+void HardcodearPedidos(ePedido datosPedido[], int tamPedidos);
 
 #endif /* HARDCODEO_H_ */
