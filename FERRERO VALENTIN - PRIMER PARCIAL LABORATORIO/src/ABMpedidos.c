@@ -1,24 +1,24 @@
 #include "ABMpedidos.h"
 
-void inicializarPedidos(ePedido datosPedido[], int tam)
+void InicializarPedidos(ePedido datosPedido[], int tam)
 {
     for(int i = 0; i < tam; i++) {
     	datosPedido[i].isEmpty = LIBRE;
     }
 }
 
-int cargarPedido( ePedido datosPedido[], int tamPedidos, eCliente datosCliente[], int tamCliente, int* pIdPedido, int reintentos)
+int CargarPedido( ePedido datosPedido[], int tamPedidos, eCliente datosCliente[], int tamCliente, int* pIdPedido, int reintentos)
 {
 	int retorno = -1;
 	int indiceCliente;
 
-	if(buscarIdCliente(datosCliente, tamCliente, reintentos, &indiceCliente) == 0)
+	if(BuscarIdCliente(datosCliente, tamCliente, reintentos, &indiceCliente) == 0)
 	{
 		for(int i = 0; i < tamPedidos; i++)
 		{
 			if(datosPedido[i].isEmpty == LIBRE)
 			{
-				if(getNumber(&datosPedido[i].kilosTotales, "\nIngrese la cantidad de kilos totales a recolectar: ", "\nError, por favor ingrese la catnidad de kilos totales: ", 1, INT_MAX, 5) == 0)
+				if(GetFloat(&datosPedido[i].kilosTotales, "\nIngrese la cantidad de kilos totales a recolectar: ", "\nError, por favor ingrese la catnidad de kilos totales: ", 1, INT_MAX, 5) == 0)
 				{
 					datosPedido[i].estadoPedido = PENDIENTE;
 					datosPedido[i].idCliente = datosCliente[indiceCliente].idCliente;
@@ -38,25 +38,22 @@ int cargarPedido( ePedido datosPedido[], int tamPedidos, eCliente datosCliente[]
 	return retorno;
 }
 
-int verListaPedidosPendientes(eCliente datosCliente[], int tamCliente, ePedido datosPedido[], int tamPedido)
+int VerListaPedidosPendientes(eCliente datosCliente[], int tamCliente, ePedido datosPedido[], int tamPedido)
 {
 	int retorno = -1;
 
 	for(int i = 0; i < tamCliente; i++)
 	{
-		if(datosCliente[i].isEmpty == OCUPADO)
+		if(datosCliente[i].isEmpty == OCUPADO && VerUnPedidoPendiente(datosPedido, tamPedido, datosCliente[i].idCliente) == 0)
 		{
-			if(verUnPedidoPendiente(datosPedido, tamPedido, datosCliente[i].idCliente) == 0)
-			{
-				retorno = 0;
-			}
+			retorno = 0;
 		}
 	}
 
 	return retorno;
 }
 
-int verUnPedidoPendiente(ePedido datosPedido[], int tamPedido, int idCliente)
+int VerUnPedidoPendiente(ePedido datosPedido[], int tamPedido, int idCliente)
 {
 	int retorno = -1;
 	int flagEncabezado = -1;
@@ -72,14 +69,14 @@ int verUnPedidoPendiente(ePedido datosPedido[], int tamPedido, int idCliente)
 				printf("\n---------------------------");
 				flagEncabezado = 0;
 			}
-			printf("\n|%*d|%*d", -11, datosPedido[i].idPedido, -11, datosPedido[i].kilosTotales);
+			printf("\n|%*d|%*f", -11, datosPedido[i].idPedido, -11, datosPedido[i].kilosTotales);
 			retorno = 0;
 		}
 	}
 	return retorno;
 }
 
-int buscarIdPedido(ePedido datosPedido[], int tam, int reintentos, int* pIndice)// SE PUEDE IR  ANEXO
+int BuscarIdPedido(ePedido datosPedido[], int tam, int reintentos, int* pIndice)// SE PUEDE IR  ANEXO
 {
 	int retorno = -1;
 	int idBuscar;
@@ -88,7 +85,7 @@ int buscarIdPedido(ePedido datosPedido[], int tam, int reintentos, int* pIndice)
 	{
 		reintentos--;
 
-		getNumber(&idBuscar, "\nIngrese el ID del pedido: ", "\nError, ID fuera de rango. Ingrese nuevamente: ", 1, tam, 5);
+		GetInt(&idBuscar, "\nIngrese el ID del pedido: ", "\nError, ID fuera de rango. Ingrese nuevamente: ", 1, tam, 5);
 
 		for(int i = 0; i < tam; i++)
 		{
@@ -109,26 +106,26 @@ int buscarIdPedido(ePedido datosPedido[], int tam, int reintentos, int* pIndice)
 	return retorno;
 }
 
-int procesarResiduos(ePedido datosPedido[], int tamPedido, int reintentos)
+int ProcesarResiduos(ePedido datosPedido[], int tamPedido, int reintentos)
 {
 	int retorno = -1;
 	int indicePedido;
 	int verificador = 0;
-	int controlKilos;
+	float controlKilos;
 
 	do
 	{
-		if(buscarIdPedido(datosPedido, tamPedido, reintentos, &indicePedido) == 0)
+		if(BuscarIdPedido(datosPedido, tamPedido, reintentos, &indicePedido) == 0)
 		{
 			controlKilos = datosPedido[indicePedido].kilosTotales;
 
-			verificador = (getNumber(&datosPedido[indicePedido].HDPE, "\nIngrese la cantidad de kilos de plastico HDPE: ", "\nError, cantidad incorrecta. Ingrese nuevamente: ", 0, INT_MAX, 5) + verificador);
+			verificador = (GetFloat(&datosPedido[indicePedido].HDPE, "\nIngrese la cantidad de kilos de plastico HDPE: ", "\nError, cantidad incorrecta. Ingrese nuevamente: ", 0, INT_MAX, 5) + verificador);
 			controlKilos = controlKilos - datosPedido[indicePedido].HDPE;
 
-			verificador = (getNumber(&datosPedido[indicePedido].LDPE, "\nIngrese la cantidad de kilos de plastico LDPE: ", "\nError, cantidad incorrecta. Ingrese nuevamente: ", 0, INT_MAX, 5) + verificador);
+			verificador = (GetFloat(&datosPedido[indicePedido].LDPE, "\nIngrese la cantidad de kilos de plastico LDPE: ", "\nError, cantidad incorrecta. Ingrese nuevamente: ", 0, INT_MAX, 5) + verificador);
 			controlKilos = controlKilos - datosPedido[indicePedido].LDPE;
 
-			verificador = (getNumber(&datosPedido[indicePedido].PP, "\nIngrese la cantidad de kilos de plastico PP: ", "\nError, cantidad incorrecta. Ingrese nuevamente: ", 0, INT_MAX, 5) + verificador);
+			verificador = (GetFloat(&datosPedido[indicePedido].PP, "\nIngrese la cantidad de kilos de plastico PP: ", "\nError, cantidad incorrecta. Ingrese nuevamente: ", 0, INT_MAX, 5) + verificador);
 			controlKilos = controlKilos - datosPedido[indicePedido].PP;
 		}
 

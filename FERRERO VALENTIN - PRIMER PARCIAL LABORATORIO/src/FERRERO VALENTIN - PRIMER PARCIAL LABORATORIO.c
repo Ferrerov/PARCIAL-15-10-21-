@@ -14,6 +14,8 @@
 #include "ABMclientes.h"
 #include "ABMpedidos.h"
 #include "informes.h"
+#include "localidad.h"
+#include "hardcodeo.h"
 
 #define TAM_CLIENTES 100
 #define TAM_PEDIDOS 1000
@@ -22,24 +24,29 @@ int main(void) {
 	setbuf(stdout, NULL);
 
 		int respuesta;
+    	int flagCarga = -1;
 
-        eCliente datosCliente[TAM_CLIENTES] = {
+        eCliente datosCliente[TAM_CLIENTES];/* = {
         											{"TRANS-CEREAL", "20432613926" , "Saavedra 1346" , "Villegas", 1,1},
 													{"EL TIO", "26432623428" , "Mitre 167" , "Trenque Lauquen", 2,1},
 													{"Me piace", "28235463972" , "Llorente 456" , "Cuenca" ,3,1},
 													{"EL PUESTITO", "25345214582" , "Oleaga 2345" , "Piedritas" , 4,1}
-        								      };
-        ePedido datosPedido[TAM_PEDIDOS] = {
+        								      };*/
+        ePedido datosPedido[TAM_PEDIDOS];/* = {
 													{1,PENDIENTE,4,450,0,0,0,OCUPADO},
 													{2,PENDIENTE,2,1000,0,0,0,OCUPADO},
 													{3,PENDIENTE,1,150,0,0,0,OCUPADO},
 													{4,PENDIENTE,3,3200,0,0,0,OCUPADO}
-										   };
+										   };*/
+        eLocalidad datosLocalidad[TAM_CLIENTES];
 
+        hardcodearClientes(datosCliente, 12);
+        hardcodearLocalidad(datosLocalidad, 6);
+        hardcodearPedidos(datosPedido, 20);
 
-
-        //inicializarClientes(datosCliente, TAM_CLIENTES);
-        //inicializarPedidos(datosPedido, TAM_CLIENTES);
+        //InicializarClientes(datosCliente, TAM_CLIENTES);
+        //InicializarPedidos(datosPedido, TAM_PEDIDOS);
+        //InicializarLocalidades(datosLocalidad, TAM_CLIENTES);
 
 	    do{
 	    	printf("\n1. Dar de alta un cliente.\n");
@@ -52,9 +59,11 @@ int main(void) {
 	    	printf("8. Ver pedidos de recoleccion procesados.\n");
 	    	printf("9. Ver pedidos de recoleccion por localidad.\n");
 	    	printf("10. Ver polipropileno reciclado promedio por cliente.\n");
-	    	printf("11. Salir.\n");
+	    	printf("11. Ver cliente con mas pedidos pendientes.\n");
+	    	printf("12. Ver cliente con mas pedidos completados.\n");
+	    	printf("13. Salir.\n");
 
-	        getNumber(&respuesta, "\nIngrese una opción: ", "\nError, ingrese una opción válida: ", 1, 11, INT_MAX);
+	    	GetInt(&respuesta, "\nIngrese una opción: ", "\nError, ingrese una opción válida: ", 1, 13, INT_MAX);
 
 	    	int idCliente;
 	    	int idPedido;
@@ -62,9 +71,10 @@ int main(void) {
 	    	switch(respuesta){
 	    	    case 1:
 	    	    	printf("Usted ha seleccionado la opción 1: Dar de alta un cliente.\n");
-	    	    	if(cargarDatosCliente(datosCliente, TAM_CLIENTES, &idCliente) == 0)
+	    	    	if(CargarDatosCliente(datosCliente, datosLocalidad, TAM_CLIENTES, &idCliente) == 0)
 	    	    	{
 	    	    		printf("\nSe ha dado de alta el cliente. \nNumero de ID de cliente: %d", idCliente);
+	    	    		flagCarga = 0;
 	    	    	}
 	    	    	else
 	    	    	{
@@ -76,14 +86,14 @@ int main(void) {
 	    	        break;
 	    	    case 2:
 	    	    	printf("Usted ha seleccionado la opción 2: Modificar datos de un cliente.\n");
-	    	    	verListaClientes(datosCliente, TAM_CLIENTES);
-	    	    	if(modificarCliente(datosCliente, TAM_CLIENTES, 5)==0)
+	    	    	VerListaClientes(datosCliente, datosLocalidad, TAM_CLIENTES);
+	    	    	if(flagCarga == 0 && ModificarCliente(datosCliente, datosLocalidad, TAM_CLIENTES, 5)==0)
 	    	    	{
 	    	    		printf("\nSe ha modificado el cliente deseado. ");
 	    	    	}
 	    	    	else
 	    	    	{
-	    	    		printf("\nNo se ha podido modificar al cliente deseado. ");
+	    	    		printf("\nNo se ha podido modificar. ");
 	    	    	}
 
 	    	    	printf("\nPulse una tecla para continuar");
@@ -91,8 +101,8 @@ int main(void) {
 	    	        break;
 	    	    case 3:
 	    	    	printf("Usted ha seleccionado la opción 3: Dar de baja un cliente.\n");
-	    	    	verListaClientes(datosCliente, TAM_CLIENTES);
-	    	    	if(bajaCliente(datosCliente, TAM_CLIENTES, 5) == 0)
+	    	    	VerListaClientes(datosCliente, datosLocalidad, TAM_CLIENTES);
+	    	    	if(flagCarga == 0 && BajaCliente(datosCliente, TAM_CLIENTES, 5) == 0)
 	    	    	{
 	    	    		printf("\nSe ha dado de baja el cliente deseado. ");
 	    	    	}
@@ -106,8 +116,8 @@ int main(void) {
 	    	    	break;
 	    	    case 4:
 	    	    	printf("Usted ha seleccionado la opción 4: Crear pedido de recolección.\n");
-	    	    	verListaClientes(datosCliente, TAM_CLIENTES);
-	    	    	if(cargarPedido(datosPedido, TAM_PEDIDOS, datosCliente, TAM_CLIENTES, &idPedido, 5) == 0)
+	    	    	VerListaClientes(datosCliente, datosLocalidad, TAM_CLIENTES);
+	    	    	if(flagCarga == 0 && CargarPedido(datosPedido, TAM_PEDIDOS, datosCliente, TAM_CLIENTES, &idPedido, 5) == 0)
 					{
 						printf("\nSe ha cargado el pedido. \nNumero de ID de pedido: %d", idPedido);
 					}
@@ -121,9 +131,9 @@ int main(void) {
 	    	    	break;
 	    	    case 5:
 	    	    	printf("Usted ha seleccionado la opción 5: Procesar residuos por pedido.\n");
-	    	    	if(verListaPedidosPendientes(datosCliente, TAM_CLIENTES, datosPedido, TAM_PEDIDOS) == 0)
+	    	    	if(flagCarga == 0 && VerListaPedidosPendientes(datosCliente, TAM_CLIENTES, datosPedido, TAM_PEDIDOS) == 0)
 	    	    	{
-	    	    		procesarResiduos(datosPedido, TAM_PEDIDOS, 5);
+	    	    		ProcesarResiduos(datosPedido, TAM_PEDIDOS, 5);
 	    	    	}
 	    	    	else
 	    	    	{
@@ -135,23 +145,15 @@ int main(void) {
 	    	    	break;
 	    	    case 6:
 	    	    	printf("Usted ha seleccionado la opción 6: Ver datos de clientes.\n");
-	    	    	if(informarClientes(datosCliente, TAM_CLIENTES, datosPedido, TAM_PEDIDOS) == 0)
-	    	    	{
-	    	    		printf("\nLista de clientes:  ");
-	    	    	}
-	    	    	else
+	    	    	if(flagCarga != 0 || InformarClientes(datosLocalidad, datosCliente, TAM_CLIENTES, datosPedido, TAM_PEDIDOS) != 0)
 	    	    	{
 	    	    		printf("\nNo hay clientes que mostrar.");
 	    	    	}
 	    	    	break;
 	    	    case 7:
 	    	    	printf("Usted ha seleccionado la opción 7: Ver pedidos de recoleccion pendientes.\n");
-	    	    	if(informarPendientes(datosCliente, TAM_CLIENTES, datosPedido, TAM_PEDIDOS) == 0)
+	    	    	if(flagCarga != 0 || InformarPendientes(datosCliente, TAM_CLIENTES, datosPedido, TAM_PEDIDOS) != 0)
 	    	    	{
-						printf("\nLista de pedidos de recoleccion pendientes:  ");
-					}
-					else
-					{
 						printf("\nNo hay pedidos de recoleccion pendientes.");
 					}
 
@@ -160,12 +162,8 @@ int main(void) {
 	    	    	break;
 	    	    case 8:
 	    	    	printf("Usted ha seleccionado la opción 8: Ver pedidos de recoleccion procesados.\n");
-	    	    	if(informarProcesados(datosCliente, TAM_CLIENTES, datosPedido, TAM_PEDIDOS) == 0)
+	    	    	if(flagCarga != 0 || InformarProcesados(datosCliente, TAM_CLIENTES, datosPedido, TAM_PEDIDOS) != 0)
 	    	    	{
-						printf("\nLista de pedidos de recoleccion procesados:  ");
-					}
-					else
-					{
 						printf("\nNo hay pedidos de recoleccion procesados.");
 					}
 
@@ -174,12 +172,8 @@ int main(void) {
 	    	    	break;
 	    	    case 9:
 	    	    	printf("Usted ha seleccionado la opción 9: Ver pedidos de recoleccion por localidad.\n");
-	    	    	if(informarPendientesPorLocalidad(datosCliente, TAM_CLIENTES, datosPedido, TAM_PEDIDOS) == 0)
+	    	    	if(flagCarga != 0 || InformarPendientesPorLocalidad(datosLocalidad, datosCliente, TAM_CLIENTES, datosPedido, TAM_PEDIDOS) != 0)
 	    	    	{
-						printf("\nLista de pedidos de recoleccion por localidad:  ");
-					}
-					else
-					{
 						printf("\nNo hay pedidos para mostrar.");
 					}
 
@@ -188,12 +182,8 @@ int main(void) {
 	    	    	break;
 	    	    case 10:
 	    	    	printf("Usted ha seleccionado la opción 10: Ver polipropileno reciclado promedio por cliente.\n");
-	    	    	if(informarPolipropilenoPromedio(datosCliente, TAM_CLIENTES, datosPedido, TAM_PEDIDOS) == 0)
+	    	    	if(flagCarga != 0 || InformarPolipropilenoPromedio(datosCliente, TAM_CLIENTES, datosPedido, TAM_PEDIDOS) != 0)
 	    	    	{
-						printf("\nLista de polipropileno reciclado promedio por cliente:  ");
-					}
-					else
-					{
 						printf("\nNo hay clientes que mostrar.");
 					}
 
@@ -201,9 +191,23 @@ int main(void) {
 					getchar();
 	    	    	break;
 	    	    case 11:
+	    	    	printf("Usted ha seleccionado la opción 11: Ver cliente con mas pedidos pendientes.\n");
+	    	    	if(flagCarga != 0 || InformarClienteMasPendientes(datosCliente, TAM_CLIENTES, datosPedido, TAM_PEDIDOS) != 0)
+	    	    	{
+	    	    		printf("\nNo hay clientes con pedidos pendientes que mostrar.");
+	    	    	}
 	    	    	break;
+	    	    case 12:
+	    	    	printf("Usted ha seleccionado la opción 12: Ver cliente con mas pedidos pendientes.\n");
+	    	    	if(flagCarga != 0 || InformarClienteMasCompletados(datosCliente, TAM_CLIENTES, datosPedido, TAM_PEDIDOS) != 0)
+					{
+	    	    		printf("\nNo hay clientes con pedidos completos que mostrar.");
+	    	    	}
+					break;
+	    	    case 13:
+					break;
 	    	}
 
-	    }while(respuesta != 11);
+	    }while(respuesta != 13);
 	return EXIT_SUCCESS;
 }

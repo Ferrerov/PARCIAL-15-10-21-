@@ -1,18 +1,15 @@
 #include "informes.h"
 
-int contadorPendientes(int* pCantidad, int idCliente, ePedido datosPedido[], int tamPedido)
+int ContadorEstadoPedido(int* pCantidad, int idCliente, int estadoPedido,ePedido datosPedido[], int tamPedido)
 {
 	int retorno = -1;
 	int contador = 0;
 
 	for(int i = 0; i < tamPedido; i++)
 	{
-		if(datosPedido[i].isEmpty == OCUPADO && datosPedido[i].estadoPedido == PENDIENTE)
+		if(datosPedido[i].isEmpty == OCUPADO && datosPedido[i].estadoPedido == estadoPedido && datosPedido[i].idCliente == idCliente)
 		{
-			if(datosPedido[i].idCliente == idCliente)
-			{
-				contador++;
-			}
+			contador++;
 		}
 	}
 	*pCantidad = contador;
@@ -20,7 +17,7 @@ int contadorPendientes(int* pCantidad, int idCliente, ePedido datosPedido[], int
 	return retorno;
 }
 
-int informarClientes(eCliente datosCliente[], int tamCliente, ePedido datosPedido[], int tamPedido)
+int InformarClientes(eLocalidad datosLocalidad[], eCliente datosCliente[], int tamCliente, ePedido datosPedido[], int tamPedido)
 {
 	int retorno = -1;
 	int cantidad;
@@ -34,9 +31,9 @@ int informarClientes(eCliente datosCliente[], int tamCliente, ePedido datosPedid
 			printf("\n----------------------------------------------------------------------------------------------------------------------");
 			flagEncabezado = 0;
 		}
-		if(mostrarUnCliente(datosCliente[i]) == 0)
+		if(MostrarUnCliente(datosCliente[i], datosLocalidad, tamCliente) == 0)
 		{
-			contadorPendientes(&cantidad, datosCliente[i].idCliente, datosPedido, tamPedido);
+			ContadorEstadoPedido(&cantidad, datosCliente[i].idCliente, PENDIENTE, datosPedido, tamPedido);
 			printf("\n(Pedidos de recoleccion pendientes: %d)\n", cantidad);
 			flagEncabezado = -1;
 			retorno = 0;
@@ -46,7 +43,7 @@ int informarClientes(eCliente datosCliente[], int tamCliente, ePedido datosPedid
 	return retorno;
 }
 
-int clientesPorPedido(int idClientePedido, eCliente datosCliente[], int tamClientes)
+int ClientesPorPedido(int idClientePedido, eCliente datosCliente[], int tamClientes)
 {
 	int retorno = -1;
 
@@ -65,7 +62,7 @@ int clientesPorPedido(int idClientePedido, eCliente datosCliente[], int tamClien
 	return retorno;
 }
 
-int informarPendientes(eCliente datosCliente[], int tamCliente, ePedido datosPedido[], int tamPedido)
+int InformarPendientes(eCliente datosCliente[], int tamCliente, ePedido datosPedido[], int tamPedido)
 {
 	int retorno = -1;
 
@@ -73,14 +70,14 @@ int informarPendientes(eCliente datosCliente[], int tamCliente, ePedido datosPed
 	{
 		if(datosPedido[i].estadoPedido == PENDIENTE && datosPedido[i].isEmpty == OCUPADO)
 		{
-			clientesPorPedido(datosPedido[i].idCliente, datosCliente, tamCliente);
-			printf("\nCantidad de kilos totales: %d\n" , datosPedido[i].kilosTotales);
+			ClientesPorPedido(datosPedido[i].idCliente, datosCliente, tamCliente);
+			printf("\nCantidad de kilos totales: %.2f\n" , datosPedido[i].kilosTotales);
 		}
 	}
 	return retorno;
 }
 
-int informarProcesados(eCliente datosCliente[], int tamCliente, ePedido datosPedido[], int tamPedido)
+int InformarProcesados(eCliente datosCliente[], int tamCliente, ePedido datosPedido[], int tamPedido)
 {
 	int retorno = -1;
 
@@ -88,10 +85,10 @@ int informarProcesados(eCliente datosCliente[], int tamCliente, ePedido datosPed
 		{
 			if(datosPedido[i].estadoPedido == COMPLETADO)
 			{
-				clientesPorPedido(datosPedido[i].idCliente, datosCliente, tamCliente);
-				printf("\nCantidad de kilos de HDPE: %d\n" , datosPedido[i].HDPE);
-				printf("\nCantidad de kilos de LDPE: %d\n" , datosPedido[i].LDPE);
-				printf("\nCantidad de kilos de PP: %d\n" , datosPedido[i].PP);
+				ClientesPorPedido(datosPedido[i].idCliente, datosCliente, tamCliente);
+				printf("\nCantidad de kilos de HDPE: %.2f\n" , datosPedido[i].HDPE);
+				printf("\nCantidad de kilos de LDPE: %.2f\n" , datosPedido[i].LDPE);
+				printf("\nCantidad de kilos de PP: %.2f\n" , datosPedido[i].PP);
 			}
 
 		}
@@ -99,61 +96,28 @@ int informarProcesados(eCliente datosCliente[], int tamCliente, ePedido datosPed
 	return retorno;
 }
 
-int verListaLocalidades(eCliente datosCliente[], int tamCliente)
+int InformarPendientesPorLocalidad(eLocalidad localidades[], eCliente datosCliente[], int tam, ePedido datosPedido[], int tamPedido)
 {
 	int retorno = -1;
+	int idLocalidad;
+	char auxLocalidad[50];
+	int cantidadPendientes;
 
-	printf("\nLocalidades: ");
-	for(int i = 0; i< tamCliente; i++)
+	VerListadoDeLocalidades(localidades, tam);
+	BuscarLocalidad(&idLocalidad, auxLocalidad, localidades, tam);
+	for(int i = 0; i < tam; i++)
 	{
-		if(datosCliente[i].isEmpty == OCUPADO)
+		if(datosCliente[i].idLocalidad == idLocalidad &&
+				ContadorEstadoPedido(&cantidadPendientes, datosCliente[i].idCliente, PENDIENTE, datosPedido, tamPedido) == 0)
 		{
-			printf("\n%s", datosCliente[i].localidad);
-			retorno = 0;
+			printf("\nLocalidad seleccionada: %s" , auxLocalidad);
+			printf("\nCantidad de pedidos pendientes: %d", cantidadPendientes);
 		}
 	}
-
 	return retorno;
 }
 
-int pedirLocalidad(eCliente datosCliente[], int tamCliente, int* pIndice)
-{
-	int retorno = -1;
-	char localidad[50];
-
-	getString("\nIngrese una localidad: ", localidad, 50);
-
-	for(int i = 0; i< tamCliente; i++)
-	{
-		if(datosCliente[i].isEmpty == OCUPADO && strcmp(datosCliente[i].localidad, localidad) == 0)
-		{
-			*pIndice = i;
-			retorno = 0;
-			break;
-		}
-	}
-
-	return retorno;
-}
-
-int informarPendientesPorLocalidad(eCliente datosCliente[], int tamCliente, ePedido datosPedido[], int tamPedido)
-{
-	int retorno = -1;
-	int cantidad;
-	int indice;
-
-	verListaLocalidades(datosCliente, tamCliente);
-	if(pedirLocalidad(datosCliente, tamCliente, &indice)==0)
-	{
-		printf("\nPedidos pendientes para la siguiente localidad: %s", datosCliente[indice].localidad);
-		contadorPendientes(&cantidad, datosCliente[indice].idCliente, datosPedido, tamPedido);
-		printf("\nLa cantidad de pedidos pendies es de: %d\n", cantidad);
-		retorno = 0;
-	}
-	return retorno;
-}
-
-int promedioPolipropileno(ePedido datosPedido[], int tamPedido, int idCliente, float* pPromedio)
+int PromedioPolipropileno(ePedido datosPedido[], int tamPedido, int idCliente, float* pPromedio)
 {
 	int retorno = -1;
 	int acumulador = 0;
@@ -176,14 +140,14 @@ int promedioPolipropileno(ePedido datosPedido[], int tamPedido, int idCliente, f
 	return retorno;
 }
 
-int informarPolipropilenoPromedio(eCliente datosCliente[], int tamCliente, ePedido datosPedido[], int tamPedido)
+int InformarPolipropilenoPromedio(eCliente datosCliente[], int tamCliente, ePedido datosPedido[], int tamPedido)
 {
 	int retorno = -1;
 	float promedio;
 
 	for(int i = 0; i < tamCliente; i++)
 	{
-		if(datosCliente[i].isEmpty == OCUPADO && promedioPolipropileno(datosPedido, tamPedido, datosCliente[i].idCliente, &promedio) == 0)
+		if(datosCliente[i].isEmpty == OCUPADO && PromedioPolipropileno(datosPedido, tamPedido, datosCliente[i].idCliente, &promedio) == 0)
 		{
 			printf("\n|%*s|" , -30, "NOMBRE DE LA EMPRESA");
 			printf("\n---------------------------------------------");
@@ -191,5 +155,57 @@ int informarPolipropilenoPromedio(eCliente datosCliente[], int tamCliente, ePedi
 			retorno = 0;
 		}
 	}
+	return retorno;
+}
+
+int BuscarMaxEstadoPedido(int* pIndice, int* pCantidad, int estadoPedido,eCliente datosCliente[], int tamCliente, ePedido datosPedido[], int tamPedido)
+{
+	int retorno = -1;
+	int cantidad;
+	int cantidadMax = 0;
+
+	for(int i = 0; i < tamCliente; i++)
+	{
+		ContadorEstadoPedido(&cantidad, datosCliente[i].idCliente, estadoPedido, datosPedido, tamPedido);
+		if(cantidad > cantidadMax)
+		{
+			cantidadMax = cantidad;
+			*pIndice = datosCliente[i].idCliente;
+		}
+	}
+	*pCantidad = cantidadMax;
+
+	return retorno;
+}
+
+int InformarClienteMasPendientes(eCliente datosCliente[], int tamCliente, ePedido datosPedido[], int tamPedido)
+{
+	int retorno = -1;
+	int indice;
+	int cantidad;
+
+	if(BuscarMaxEstadoPedido(&indice, &cantidad, PENDIENTE, datosCliente, tamCliente, datosPedido, tamPedido) == 0)
+	{
+		printf("\nEl cliente que mas pedidos pendientes tiene es: %s", datosCliente[indice].empresa);
+		printf("\nLa cantidad de pedidos pendientes es de: %d", cantidad);
+		retorno = 0;
+	}
+
+	return retorno;
+}
+
+int InformarClienteMasCompletados(eCliente datosCliente[], int tamCliente, ePedido datosPedido[], int tamPedido)
+{
+	int retorno = -1;
+	int indice;
+	int cantidad;
+
+	if(BuscarMaxEstadoPedido(&indice, &cantidad, COMPLETADO, datosCliente, tamCliente, datosPedido, tamPedido) == 0)
+	{
+		printf("\nEl cliente que mas pedidos completados tiene es: %s", datosCliente[indice].empresa);
+		printf("\nLa cantidad de pedidos completados es de: %d", cantidad);
+		retorno = 0;
+	}
+
 	return retorno;
 }

@@ -1,16 +1,38 @@
 #include "input.h"
 
-void getString(char message[],char string[],int tam)
+void GetString(char message[],char string[])
 {
-	char auxiliar[tam];
+	printf("%s", message);
+	fflush(stdin);
+	gets(string);
+
+}
+
+int GetYesNo(char message[], char errorMessage[], char* pAnswer, int retries)
+{
+	int validation = -1;
+	char answer;
 
 	printf("%s", message);
 	fflush(stdin);
-	fgets(auxiliar, sizeof auxiliar, stdin);
-	strcpy(string, auxiliar);
+	scanf("%c", &answer);
+	while(!(answer == 's' || answer == 'n') && retries > 0)
+	{
+		retries--;
+		printf("%s", errorMessage);
+		fflush(stdin);
+		scanf("%c", &answer);
+	}
+	if(answer == 's' || answer == 'n')
+	{
+		*pAnswer = answer;
+		validation = 0;
+	}
+
+	return validation;
 }
 
-int getNumber(int* pResult, char message[], char errorMessage[], int min, int max, int retries)
+int GetInt(int* pResult, char message[], char errorMessage[], int min, int max, int retries)
 {
 	int number;
 	int validation = -1;
@@ -19,7 +41,7 @@ int getNumber(int* pResult, char message[], char errorMessage[], int min, int ma
 	while(retries > 0)
 	{
 		retries--;
-		if (stringValidation(&number) == 0)
+		if (StringValidation(&number) == 0)
 		{
 			if (number >= min && number <= max)
 			{
@@ -34,14 +56,87 @@ int getNumber(int* pResult, char message[], char errorMessage[], int min, int ma
 
 	return validation;
 }
-int stringValidation(int* pResult)
+
+int GetFloat(float* pResult, char message[], char errorMessage[], int min, int max, int retries)
+{
+	float number;
+	int validation = -1;
+
+	printf("%s", message);
+
+	while(retries > 0)
+	{
+		retries--;
+		if (FloatStringValidation(&number) == 0)
+		{
+			if (number >= min && number <= max)
+			{
+				*pResult = number;
+				validation = 0;
+				break;
+			}
+			break;
+		}
+		printf("%s", errorMessage);
+	}
+	return validation;
+}
+
+int FloatStringValidation(float* result)
 {
 	int validation = -1;
 	char string[20];
 
 	scanf("%s", string);
 
-		if(numberValidation(string) == 0)
+	if(FloatNumberValidation(string) == 0)
+	{
+		*result = atof(string);
+		validation = 0;
+	}
+	return validation;
+}
+
+int FloatNumberValidation(char string[])
+{
+	int i = 0;
+	int validation = 0;
+	int flagDot = 0;
+
+	while (string[i] != '\0')
+	{
+		if (string[i] == '.' && flagDot == 0)
+		{
+			i++;
+			flagDot = 1;
+			if ((isdigit(string[i])) == 0)
+			{
+				validation = -1;
+				break;
+			}
+			i++;
+		}
+		else
+		{
+			if ((isdigit(string[i])) == 0)
+			{
+				validation = -1;
+				break;
+			}
+			i++;
+		}
+	}
+	return validation;
+}
+
+int StringValidation(int* pResult)
+{
+	int validation = -1;
+	char string[20];
+
+	scanf("%s", string);
+
+		if(NumberValidation(string) == 0)
 		{
 		*pResult = atoi(string);
 		validation = 0;
@@ -49,7 +144,7 @@ int stringValidation(int* pResult)
 
 	return validation;
 }
-int numberValidation(char string[])
+int NumberValidation(char string[])
 {
 	int i = 0;
 	int validation = 0;
