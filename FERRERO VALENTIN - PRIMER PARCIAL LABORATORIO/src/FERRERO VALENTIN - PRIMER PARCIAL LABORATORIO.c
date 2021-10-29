@@ -40,13 +40,14 @@ int main(void) {
 										   };*/
         eLocalidad datosLocalidad[TAM_CLIENTES];
 
-        HardcodearClientes(datosCliente, 12);
-        HardcodearLocalidad(datosLocalidad, 6);
-        HardcodearPedidos(datosPedido, 20);
+        //HardcodearClientes(datosCliente, 12);
+        //HardcodearLocalidad(datosLocalidad, 6);
+        //HardcodearPedidos(datosPedido, 20);
+        //flagCarga = 0;
 
-        //InicializarClientes(datosCliente, TAM_CLIENTES);
-        //InicializarPedidos(datosPedido, TAM_PEDIDOS);
-        //InicializarLocalidades(datosLocalidad, TAM_CLIENTES);
+        InicializarClientes(datosCliente, TAM_CLIENTES);
+        InicializarPedidos(datosPedido, TAM_PEDIDOS);
+        InicializarLocalidades(datosLocalidad, TAM_CLIENTES);
 
 	    do{
 	    	printf("\n1. Dar de alta un cliente.\n");
